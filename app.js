@@ -36,14 +36,14 @@ app.get("/", (req, res) => {
 //   res.redirect("/users");
 // });
 
-// New version: Signup with phone
+// New version: Signup with phone and hobby
 app.post("/signup", (req, res) => {
-  const { name, email, phone } = req.body;
-  if (!name || !email || !phone) {
-    return res.send("Please enter name, email, and phone.");
+  const { name, email, phone, hobby } = req.body;
+  if (!name || !email || !phone || !hobby) {
+    return res.send("Please enter name, email, phone, and hobby.");
   }
 
-  const newUser = { id: Date.now(), name, email, phone };
+  const newUser = { id: Date.now(), name, email, phone, hobby };
   users.push(newUser);
   fs.writeFileSync(DATA_FILE, JSON.stringify(users, null, 2));
 
@@ -80,12 +80,12 @@ app.post("/signup", (req, res) => {
 //   res.send(html);
 // });
 
-// New version: User list view
+// New version: User list view with phone and hobby
 app.get("/users", (req, res) => {
   let html = `
   <h2>Registered Users</h2>
   <table border="1" cellpadding="5">
-    <tr><th>ID</th><th>Name</th><th>Email</th><th>Phone</th><th>Action</th></tr>
+    <tr><th>ID</th><th>Name</th><th>Email</th><th>Phone</th><th>Hobby</th><th>Action</th></tr>
   `;
 
   users.forEach(u => {
@@ -95,6 +95,7 @@ app.get("/users", (req, res) => {
         <td>${u.name}</td>
         <td>${u.email}</td>
         <td>${u.phone || "-"}</td>
+        <td>${u.hobby || "-"}</td>
         <td>
           <form action="/delete/${u.id}" method="POST" style="display:inline;">
             <button type="submit">Delete</button>
